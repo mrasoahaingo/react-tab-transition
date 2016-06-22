@@ -43,6 +43,7 @@ export default class App extends Component {
   }
 
   onAnimatingEnd = () => {
+    console.log('END', this.animating);
     this.animating = false;
   }
 
