@@ -21,7 +21,6 @@ export default class App extends Component {
     if(this.animating) {
       return;
     }
-    console.log('qsd', this.animating);
 
     this.animating = true;
     
