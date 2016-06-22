@@ -65,7 +65,7 @@ export default class Panel extends Component {
       above: true,
     });
     this.animations.push(TweenMax
-      .fromTo(this.bg, .5, {
+      .fromTo(this.bg, .3, {
         y: window.innerHeight,
         scale: 1,
         opacity: 1
@@ -83,7 +83,7 @@ export default class Panel extends Component {
       above: false,
     });
     this.animations.push(TweenMax
-      .fromTo(this.bg, .5, {
+      .fromTo(this.bg, .3, {
         y: 0,
         scale: .8,
         opacity: .5
@@ -117,14 +117,14 @@ export default class Panel extends Component {
       above: true
     });
     this.animations.push(TweenMax
-      .fromTo([this.bg, this.content], .7, {
+      .fromTo([this.bg, this.content], .5, {
         y: 0,
         scale: 1,
         opacity: 1
       }, {
         y: window.innerHeight,
         scale: 1,
-        opacity: .5,
+        opacity: .8,
         onComplete: resolve.bind(this)
       }));
   });

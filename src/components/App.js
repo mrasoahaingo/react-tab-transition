@@ -30,7 +30,7 @@ export default class App extends Component {
     if(deltaY !== 0 ) {
       this.setState({
         direction: deltaY > 0 ? 'up' : 'down',
-        currentPanel: currentPanel < 0 ? 4 : (currentPanel > 5 ? 0 : currentPanel)
+        currentPanel: currentPanel < 0 ? 4 : (currentPanel > 4 ? 0 : currentPanel)
       });
     }
   }
