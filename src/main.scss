@@ -1,0 +1,172 @@
+$color: #DBDFE5;
+
+html, body {
+  background-color: $color;
+  font-family: 'Raleway', sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.nav {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+  }
+
+  &__item {
+    margin: 5px 0;
+    font-size: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    span {
+      display: block;
+      padding: 5px 10px;
+      position: relative;
+      font-weight: normal;
+    }
+
+    &:before {
+      content: '';
+      background: #000;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      will-change: transform;
+      transform: translateX(-100%);
+      transition: transform 0s ease-in-out;
+    }
+
+    &--active {
+      color: #fff;
+      font-size: 30px;
+      animation: scaleAnim .1s ease-in-out;
+
+      span {
+        padding: 10px;
+      }
+
+      &:before {
+        transition: transform .35s ease-in-out;
+        transform: translateX(0);
+      }
+    }
+  }
+}
+
+@keyframes scaleAnim {
+  from {
+    transform: scale(1, .6);
+  }
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+.container, .panels, .panel, .bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  transform: translateZ(1px);
+}
+
+.panels {
+  z-index: 1;
+}
+
+.panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  color: #fff;
+  transform: translateY(100%);
+  z-index: 1;
+
+  &--opened {
+    transform: translateY(0) scale(1);
+  }
+
+  &--above {
+    z-index: 2;
+  }
+
+  .content {
+    position: relative;
+  }
+
+  .bg {
+    transform: translateY(100%);
+  }
+
+  &:nth-child(1) {
+    .bg { background-color: #9B59B6; }
+  }
+  &:nth-child(2) {
+    .bg { background-color: #34495E; }
+  }
+  &:nth-child(3) {
+    .bg { background-color: #E67E22; }
+  }
+  &:nth-child(4) {
+    .bg { background-color: #1ABC9C; }
+  }
+  &:nth-child(5) {
+    .bg { background-color: #E74C3C; }
+  }
+}
+
+.content {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+
+  height: 100%;
+}
+
+.item {
+  flex: 0 1 250px;
+  align-self: auto;
+
+  opacity: 0;
+  padding: 10px;
+  width: 30%;
+
+  &__content {
+    background: #000;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
