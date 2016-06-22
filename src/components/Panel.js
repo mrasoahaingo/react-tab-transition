@@ -65,7 +65,7 @@ export default class Panel extends Component {
       above: true,
     });
     this.animations.push(TweenMax
-      .fromTo(this.bg, .3, {
+      .fromTo(this.bg, .5, {
         y: window.innerHeight,
         scale: 1,
         opacity: 1
@@ -117,7 +117,7 @@ export default class Panel extends Component {
       above: true
     });
     this.animations.push(TweenMax
-      .fromTo([this.bg, this.content], .5, {
+      .fromTo([this.bg, this.content], .7, {
         y: 0,
         scale: 1,
         opacity: 1
