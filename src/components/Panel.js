@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TweenMax from 'gsap';
+import TweenMax, { Expo } from 'gsap';
 import Hammer from 'hammerjs';
 import c from 'classnames';
 import _ from 'lodash';
@@ -34,7 +34,7 @@ export default class Panel extends Component {
       this.setState({
         wrapperInitialPosX: this.state.wrapperPosX
       });
-    })
+    });
   }
 
   animate = (props) => {
@@ -65,14 +65,20 @@ export default class Panel extends Component {
       above: true,
     });
     this.animations.push(TweenMax
-      .fromTo(this.bg, .5, {
+      .fromTo(this.bg, .7, {
         y: window.innerHeight,
         scale: 1,
-        opacity: 1
+        opacity: 1,
+        z: 0.1,
+        force3D: true,
+        ease: Expo.easeIn
       }, {
         y: 0,
         scale: 1,
         opacity: 1,
+        z: 0.1,
+        force3D: true,
+        ease: Expo.easeIn,
         onComplete: resolve.bind(this)
       }));
   });
@@ -83,14 +89,20 @@ export default class Panel extends Component {
       above: false,
     });
     this.animations.push(TweenMax
-      .fromTo(this.bg, .3, {
+      .fromTo(this.bg, .5, {
         y: 0,
         scale: .8,
-        opacity: .5
+        opacity: .5,
+        z: 0.1,
+        force3D: true,
+        ease: Expo.easeIn
       }, {
         y: 0,
         scale: 1,
         opacity: 1,
+        z: 0.1,
+        force3D: true,
+        ease: Expo.easeIn,
         onComplete: resolve.bind(this)
       }));
   });
@@ -100,14 +112,20 @@ export default class Panel extends Component {
       above: false
     });
     this.animations.push(TweenMax
-      .fromTo([this.bg, this.content], .7, {
+      .fromTo([this.bg, this.content, this.title], 1, {
         y: 0,
         scale: 1,
-        opacity: 1
+        opacity: 1,
+        z: 0.1,
+        force3D: true,
+        ease: Expo.easeOut
       }, {
         y: 0,
         scale: .8,
         opacity: .5,
+        ease: Expo.easeOut,
+        z: 0.1,
+        force3D: true,
         onComplete: resolve.bind(this)
       }));
   });
@@ -117,14 +135,20 @@ export default class Panel extends Component {
       above: true
     });
     this.animations.push(TweenMax
-      .fromTo([this.bg, this.content], .7, {
+      .fromTo([this.bg, this.content, this.title], 1, {
         y: 0,
         scale: 1,
-        opacity: 1
+        opacity: 1,
+        z: 0.1,
+        force3D: true,
+        ease: Expo.easeOut
       }, {
         y: window.innerHeight,
         scale: 1,
         opacity: .8,
+        ease: Expo.easeOut,
+        z: 0.1,
+        force3D: true,
         onComplete: resolve.bind(this)
       }));
   });
@@ -140,17 +164,32 @@ export default class Panel extends Component {
   onOpenComplete = () => {
     const { handleAnimatingEnd } = this.props;
     const visibleChildren = _.take(this.wrapper.children, 8);
+    const oddChildren = _.filter(visibleChildren, (child, i) => i % 2 === 0);
+    const evenChildren = _.filter(visibleChildren, (child, i) => i % 2 === 1);
     const restChildren = _.takeRight(this.wrapper.children, 12);
 
     _.each(restChildren, child => child.style.opacity = 1);
 
-    this.animations.push(TweenMax.staggerFromTo(visibleChildren, .2, {
-      y: 10,
-      opacity: 0
+    console.log('onOpenComplete');
+
+    this.animations.push(TweenMax.fromTo(this.title, .7, {
+      opacity: 0,
+      ease: Expo.easeOut
     }, {
-      y: 0,
-      opacity: 1
-    }, .1, () => handleAnimatingEnd()));
+      opacity: 1,
+      ease: Expo.easeOut
+    }));
+
+    this.animations.push(TweenMax.staggerFromTo([...oddChildren, ...evenChildren], .7, {
+      opacity: 0,
+      ease: Expo.easeIn
+    }, {
+      opacity: 1,
+      ease: Expo.easeIn
+    }, .1, () => {
+      console.log('staggerFromTo');
+      handleAnimatingEnd();
+    }));
   }
 
   onLeave = (direction) => {
@@ -164,6 +203,7 @@ export default class Panel extends Component {
   onLeaveComplete = () => {
     this.bg.style = null;
     this.content.style = null;
+    this.title.style = null;
 
     _.each(this.wrapper.children, child => child.style = null);
 
@@ -175,7 +215,7 @@ export default class Panel extends Component {
   }
 
   render() {
-    
+    const { title } = this.props;
     const { opened, above, wrapperPosX } = this.state;
     const className = c('panel', {
       'panel--opened': opened,
@@ -185,6 +225,7 @@ export default class Panel extends Component {
     return (
       <section className={className} ref={ref => this.panel = ref}>
         <div className="bg" ref={ref => this.bg = ref}></div>
+        <h1 className="title" ref={ref => this.title = ref}>{title}</h1>
         <div className="content" ref={ref => this.content = ref}>
           <div className="wrapper" ref={ref => this.wrapper = ref} style={{ transform: `translateX(${wrapperPosX}px)` }}>
             {_.range(20).map((i) => (

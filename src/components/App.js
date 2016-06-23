@@ -54,11 +54,11 @@ export default class App extends Component {
       <div className="container">
         <Nav handleChangePanel={this.onChangePanel} currentPanelIndex={currentPanelIndex}/>
         <div className="panels">
-          <Panel open={0 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd}/>
-          <Panel open={1 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd}/>
-          <Panel open={2 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd}/>
-          <Panel open={3 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd}/>
-          <Panel open={4 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd}/>
+          <Panel open={0 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd} title="Live"/>
+          <Panel open={1 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd} title="A la Une"/>
+          <Panel open={2 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd} title="Ma selection"/>
+          <Panel open={3 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd} title="Category A"/>
+          <Panel open={4 === currentPanelIndex} direction={direction} handleAnimatingEnd={this.onAnimatingEnd} title="Category B"/>
         </div>
       </div>
     );

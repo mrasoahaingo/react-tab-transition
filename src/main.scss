@@ -18,7 +18,7 @@ html, body {
 
 .nav {
   position: absolute;
-  top: 20%;
+  top: 28%;
   bottom: 0;
   left: 0;
   z-index: 2;
@@ -97,11 +97,11 @@ html, body {
 .panel {
   display: flex;
   justify-content: center;
-  align-items: center;
   font-size: 40px;
   color: #fff;
   transform: translateY(100%);
   z-index: 1;
+  flex-direction: column;
 
   &--opened {
     transform: translateY(0) scale(1);
@@ -132,12 +132,16 @@ html, body {
   }
 }
 
+.title {
+  opacity: 0;
+  margin: 0 0 50px 250px;
+  position: relative;
+}
+
 .content {
-  position: absolute;
-  left: 250px;
-  right: 0;
   height: 500px;
-  top: 20%;
+  margin-left: 250px;
+  width: calc(100% - 250px);
   overflow: hidden;
 }
 
@@ -157,7 +161,7 @@ html, body {
   align-self: auto;
 
   opacity: 0;
-  padding: 0 10px 20px;
+  padding: 0 20px 20px 0;
   width: 30%;
 
   &__content {
