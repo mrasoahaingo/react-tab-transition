@@ -12,13 +12,20 @@ export default class Panel extends Component {
     opened: false,
     above: false,
     wrapperInitialPosX: 0,
-    wrapperPosX: 0
+    wrapperPosX: 0,
+
+    bgPosX: 0
   };
 
   items = [];
 
   componentWillReceiveProps(nextProps) {
-    this.animate(nextProps);
+    if(nextProps.currentPanelIndex !== this.props.currentPanelIndex) {
+      this.animate(nextProps);
+      document.addEventListener('scroll', this.onScroll);
+    } else {
+      document.removeEventListener('scroll', this.onScroll);
+    }
   }
 
   componentDidMount() {
@@ -37,16 +44,58 @@ export default class Panel extends Component {
     });
   }
 
+  onScroll = () => {
+    const scrollPageTop = document.body.scrollTop % window.innerHeight;
+    const isCurrent = this.props.index === this.props.currentPanelIndex;
+
+    if(scrollPageTop === 0) {
+      return;
+    }
+
+    if(scrollPageTop <= window.innerHeight / 2) {
+
+      if (isCurrent) {
+        this.panel.style.transform = 'scale(' + (1 - (scrollPageTop / window.innerHeight) * .1) + ')';
+      }
+
+      if (this.isNextPanel()) {
+        this.setState({
+          above: true
+        });
+        this.panel.style.transform = 'translateY(' + (window.innerHeight - scrollPageTop) + 'px)';
+      }
+
+    } else {
+
+      if (isCurrent) {
+        this.panel.style.transform = 'translateY(' + (window.innerHeight - scrollPageTop) + 'px)';
+      }
+
+      if (this.isPreviousPanel()) {
+        this.panel.style.transform = 'scale(' + (1 - (scrollPageTop / window.innerHeight) * .1) + ')';
+      }
+
+    }
+  }
+
   animate = (props) => {
-    const { open, direction } = props;
+    const { currentPanelIndex, index, direction } = props;
 
     this.killAnimations(this.animations);
 
-    if (open) {
+    if (currentPanelIndex === index) {
       this.onEnter(direction);
-    } else {
+    } else if(this.props.index === this.props.currentPanelIndex){
       this.onLeave(direction);
     }
+  }
+
+  isNextPanel = () => {
+    return this.props.index === this.props.currentPanelIndex + 1;
+  }
+
+  isPreviousPanel = () => {
+    return this.props.index === this.props.currentPanelIndex - 1;
   }
 
   killAnimations = (animations) => {
@@ -65,20 +114,20 @@ export default class Panel extends Component {
       above: true,
     });
     this.animations.push(TweenMax
-      .fromTo(this.bg, .7, {
-        y: window.innerHeight,
+      .fromTo(this.panel, 1, {
+        y: window.innerHeight / 2,
         scale: 1,
         opacity: 1,
         z: 0.1,
         force3D: true,
-        ease: Expo.easeIn
+        ease: Expo.easeOut
       }, {
         y: 0,
         scale: 1,
         opacity: 1,
         z: 0.1,
         force3D: true,
-        ease: Expo.easeIn,
+        ease: Expo.easeOut,
         onComplete: resolve.bind(this)
       }));
   });
@@ -89,10 +138,10 @@ export default class Panel extends Component {
       above: false,
     });
     this.animations.push(TweenMax
-      .fromTo(this.bg, .5, {
+      .fromTo(this.panel, .5, {
         y: 0,
-        scale: .8,
-        opacity: .5,
+        scale: .95,
+        opacity: 1,
         z: 0.1,
         force3D: true,
         ease: Expo.easeIn
@@ -107,36 +156,13 @@ export default class Panel extends Component {
       }));
   });
 
-  scaleDownToClose = () => new Promise(resolve => {
-    this.setState({
-      above: false
-    });
-    this.animations.push(TweenMax
-      .fromTo([this.bg, this.content, this.title], 1, {
-        y: 0,
-        scale: 1,
-        opacity: 1,
-        z: 0.1,
-        force3D: true,
-        ease: Expo.easeOut
-      }, {
-        y: 0,
-        scale: .8,
-        opacity: .5,
-        ease: Expo.easeOut,
-        z: 0.1,
-        force3D: true,
-        onComplete: resolve.bind(this)
-      }));
-  });
-
   slideToClose = () => new Promise(resolve => {
     this.setState({
       above: true
     });
     this.animations.push(TweenMax
-      .fromTo([this.bg, this.content, this.title], 1, {
-        y: 0,
+      .fromTo(this.panel, 1, {
+        y: window.innerHeight / 2,
         scale: 1,
         opacity: 1,
         z: 0.1,
@@ -145,13 +171,37 @@ export default class Panel extends Component {
       }, {
         y: window.innerHeight,
         scale: 1,
-        opacity: .8,
+        opacity: 1,
         ease: Expo.easeOut,
         z: 0.1,
         force3D: true,
         onComplete: resolve.bind(this)
       }));
   });
+
+  scaleDownToClose = () => new Promise(resolve => {
+    this.setState({
+      above: false
+    });
+    this.animations.push(TweenMax
+      .fromTo(this.panel, 1, {
+        y: 0,
+        scale: 1,
+        opacity: 1,
+        z: 0.1,
+        force3D: true,
+        ease: Expo.easeOut
+      }, {
+        y: 0,
+        scale: .95,
+        opacity: 1,
+        ease: Expo.easeOut,
+        z: 0.1,
+        force3D: true,
+        onComplete: resolve.bind(this)
+      }));
+  });
+
 
   onEnter = (direction) => {
     if(direction === 'up') {
@@ -201,6 +251,7 @@ export default class Panel extends Component {
   }
 
   onLeaveComplete = () => {
+    this.panel.style = null;
     this.bg.style = null;
     this.content.style = null;
     this.title.style = null;

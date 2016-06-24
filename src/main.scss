@@ -7,7 +7,6 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: hidden;
 }
 
 * {
@@ -17,7 +16,7 @@ html, body {
 }
 
 .nav {
-  position: absolute;
+  position: fixed;
   top: 28%;
   bottom: 0;
   left: 0;
@@ -80,7 +79,27 @@ html, body {
   }
 }
 
-.container, .panels, .panel, .bg {
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+}
+
+.panels {
+  z-index: 1;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+.bg {
   position: absolute;
   top: 0;
   right: 0;
@@ -90,11 +109,14 @@ html, body {
   transform: translateZ(1px);
 }
 
-.panels {
-  z-index: 1;
-}
-
 .panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+
   display: flex;
   justify-content: center;
   font-size: 40px;
@@ -109,10 +131,6 @@ html, body {
 
   &--above {
     z-index: 2;
-  }
-
-  .bg {
-    transform: translateY(100%);
   }
 
   &:nth-child(1) {

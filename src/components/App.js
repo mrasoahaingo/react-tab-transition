@@ -9,7 +9,7 @@ export default class App extends Component {
     animating: false,
     direction: 'up',
     currentPanel: 0,
-    deltaY: 0
+    scrollPageTop: 0
   };
 
   componentDidMount() {
@@ -18,8 +18,6 @@ export default class App extends Component {
   }
 
   onScroll = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
     const scrollPageTop = document.body.scrollTop % window.innerHeight;
     const middlePage = window.innerHeight / 2;
     const currentPos = document.body.scrollTop / window.innerHeight;
@@ -27,8 +25,8 @@ export default class App extends Component {
 
     if(currentPanel !== this.state.currentPanel) {
       this.setState({
-        direction: currentPanel < this.state.currentPanel ? 'up' : 'down',
-        currentPanel: currentPanel
+        direction: currentPanel > this.state.currentPanel ? 'up' : 'down',
+        currentPanel
       });
       document.body.scrollTop = currentPanel * window.innerHeight;
     }
@@ -47,7 +45,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { currentPanel, direction, deltaY } = this.state;
+    const { currentPanel, direction, scrollPageTop } = this.state;
     const currentPanelIndex = Math.abs(currentPanel);
     return (
       <div>
@@ -55,11 +53,11 @@ export default class App extends Component {
         <div className="container">
           <Nav handleChangePanel={this.onChangePanel} currentPanelIndex={currentPanelIndex}/>
           <div className="panels">
-            <Panel open={0 === currentPanelIndex} direction={direction} deltaY={deltaY} handleAnimatingEnd={this.onAnimatingEnd} title="Live"/>
-            <Panel open={1 === currentPanelIndex} direction={direction} deltaY={deltaY} handleAnimatingEnd={this.onAnimatingEnd} title="A la Une"/>
-            <Panel open={2 === currentPanelIndex} direction={direction} deltaY={deltaY} handleAnimatingEnd={this.onAnimatingEnd} title="Ma selection"/>
-            <Panel open={3 === currentPanelIndex} direction={direction} deltaY={deltaY} handleAnimatingEnd={this.onAnimatingEnd} title="Category A"/>
-            <Panel open={4 === currentPanelIndex} direction={direction} deltaY={deltaY} handleAnimatingEnd={this.onAnimatingEnd} title="Category B"/>
+            <Panel index={0} currentPanelIndex={currentPanelIndex} direction={direction} scrollPageTop={scrollPageTop} handleAnimatingEnd={this.onAnimatingEnd} title="Live"/>
+            <Panel index={1} currentPanelIndex={currentPanelIndex} direction={direction} scrollPageTop={scrollPageTop} handleAnimatingEnd={this.onAnimatingEnd} title="A la Une"/>
+            <Panel index={2} currentPanelIndex={currentPanelIndex} direction={direction} scrollPageTop={scrollPageTop} handleAnimatingEnd={this.onAnimatingEnd} title="Ma selection"/>
+            <Panel index={3} currentPanelIndex={currentPanelIndex} direction={direction} scrollPageTop={scrollPageTop} handleAnimatingEnd={this.onAnimatingEnd} title="Category A"/>
+            <Panel index={4} currentPanelIndex={currentPanelIndex} direction={direction} scrollPageTop={scrollPageTop} handleAnimatingEnd={this.onAnimatingEnd} title="Category B"/>
           </div>
         </div>
       </div>
